@@ -1,4 +1,4 @@
-local traverseArea = require("traverseLib").traverseArea
+local traverseArea = require("traverseLib").traverseAreaTwice
 local dropRange = require("inventoryLib").dropRange
 
 local length = tonumber(arg[1])
@@ -11,14 +11,7 @@ function suck()
     end
 end
 
-traverseArea(length, width, turtle.placeDown)
-if width % 2 == 0 then
-    turtle.turnRight()
-else
-    turtle.turnRight()
-    turtle.turnRight()
-end
-traverseArea(length, width, suck)
+traverseAreaTwice(length, width, turtle.placeDown, suck)
 
 dropRange(2,16,1)
 turtle.turnRight()

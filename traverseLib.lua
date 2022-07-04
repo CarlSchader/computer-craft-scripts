@@ -6,7 +6,7 @@ lib.traverseArea = function(length, width, operationFunc)
     local direction = 1
 
     while traversed < total - 1 do
-        operationFunc()
+        operationFunc(traversed)
         traversed = traversed + 1
         if traversed % length == 0 then
             if (traversed / length) % 2 == 1 then
@@ -23,7 +23,36 @@ lib.traverseArea = function(length, width, operationFunc)
             turtle.forward()
         end
     end
-    operationFunc()
+    operationFunc(traversed)
+end
+
+lib.traverseAreaTwice = function(length, width, op1, op2)
+    lib.traverseArea(length, width, op1)
+    if width % 2 == 0 then
+        turtle.turnRight()
+    else
+        turtle.turnRight()
+        turtle.turnRight()
+    end
+    lib.traverseArea(length, width, op2)
+end
+
+lib.forwardMany = function(count)
+    for _ = 1,count,1 do
+        turtle.forward()
+    end
+end
+
+lib.backMany = function(count)
+    for _ = 1,count,1 do
+        turtle.back()
+    end
+end
+
+lib.downMany = function(count)
+    for _ = 1,count,1 do
+        turtle.down()
+    end
 end
 
 return lib

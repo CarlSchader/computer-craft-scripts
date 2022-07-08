@@ -25,6 +25,15 @@ lib.empty = function()
     turtle.select(1)
 end
 
+lib.emptyDown = function()
+    for i = 1,SLOT_COUNT,1 do
+        turtle.select(i)
+        turtle.dropDown()
+    end
+    turtle.select(1)
+end
+
+
 lib.dropRange = function(start, limit, increment)
     increment = increment or 1
     for i = start,limit,increment do
@@ -32,6 +41,12 @@ lib.dropRange = function(start, limit, increment)
         turtle.drop()
     end
     turtle.select(1)
+end
+
+lib.dropItemAll = function(itemId)
+    while lib.selectItem(itemId) do
+        turtle.drop()
+    end
 end
 
 return lib

@@ -4,36 +4,6 @@ local function emptyFunc()
     return
 end
 
--- Old traverse area
--- -- Turtle must be on the first block in the area.
--- -- It will traverse the area length in front of it and width to the right.
--- -- It does not come back.
--- lib.traverseArea = function(length, width, operationFunc)
---     local traversed = 0
---     local total = length * width
---     local direction = 1
-
---     while traversed < total - 1 do
---         operationFunc(traversed)
---         traversed = traversed + 1
---         if traversed % length == 0 then
---             if (traversed / length) % 2 == 1 then
---                 turtle.turnRight()
---                 turtle.forward()
---                 turtle.turnRight()
---             else
---                 turtle.turnLeft()
---                 turtle.forward()
---                 turtle.turnLeft()
---             end
---             direction = direction * (-1)
---         else
---             turtle.forward()
---         end
---     end
---     operationFunc(traversed)
--- end
-
 -- Turtle starts facing first block of area and traverses 
 -- length in front and width to the right. 
 -- Each op is meant to be done on the block in front of it.

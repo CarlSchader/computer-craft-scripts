@@ -49,4 +49,13 @@ lib.dropItemAll = function(itemId)
     end
 end
 
+lib.findEmptySlot = function()
+    for i = 1,16,1 do
+        if turtle.getItemCount(i) == 0 then
+            return i
+        end
+    end
+    return nil
+end
+
 return lib

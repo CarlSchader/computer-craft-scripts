@@ -1,3 +1,4 @@
+local json = require("json")
 local traverseArea = require("traverseLib").traverseArea
 local downMany = require("traverseLib").downMany
 local forwardMany = require("traverseLib").forwardMany
@@ -5,15 +6,15 @@ local emptyDown = require("inventoryLib").emptyDown
 local selectItem = require("inventoryLib").selectItem
 local dropItemAll = require("inventoryLib").dropItemAll
 
-local length = tonumber(arg[1])
-local width = tonumber(arg[2])
-local sleepTime = tonumber(arg[3])
+local config = json.readFile(arg[1])
+local length = config.length
+local width = config.width
+local sleepTime = config.sleepTime
+local sparsity = config.sparsity
 
 local saplingId = "minecraft:spruce_sapling"
 local logId = "minecraft:spruce_log"
 local leavesId = "minecraft:spruce_leaves"
-local saplingOffset = 3
-local sleepTime = sleepTime or 150 -- default 2.5 minutes
 
 local inTree = false
 
@@ -32,19 +33,19 @@ function inOp(i, j)
         local height = 0
         turtle.digDown()
         local block, inspection = turtle.inspectUp()
-        while block and inspection.name == logId do
+        while block and (inspection.name == logId or inspection.name == leavesId) do
             turtle.digUp()
             turtle.up()
             height = height + 1
             block, inspection = turtle.inspectUp()
         end
-        downMany(height)
+        downMany(height, turtle.digDown)
         if selectItem(logId) then
             turtle.dropDown()
         end
         inTree = false
     end
-    if (((i - 1) * length) + j) % saplingOffset == 0 then
+    if 1 < i and i < width and (((i - 2) % (2 + sparsity) == 0) or ((i - 2) % (2 + sparsity) == 1)) and ((j % (2 + sparsity) == 0) or (j % (2 + sparsity) == 1)) and j < length then
         if selectItem(saplingId) then
             turtle.placeDown()
         end
@@ -55,10 +56,16 @@ while true do
     -- refuel
     turtle.suckDown()
     turtle.refuel()
-    turtle.dropDown()
+    turtle.turnRight()
+    turtle.turnRight()
+    turtle.drop()
+    turtle.turnRight()
+    turtle.turnRight()
 
     -- get saplings
-    turtle.suck(math.floor((length * width) / saplingOffset))
+    for _ = 1,math.ceil((length * width) / (sparsity * 64)),1 do
+        turtle.suck()
+    end
     turtle.turnRight()
     turtle.turnRight()
 
@@ -69,14 +76,14 @@ while true do
     if width % 2 == 0 then
         turtle.forward()
         turtle.turnRight()
-        forwardMany(width - 1)
+        forwardMany(width - 1, turtle.dig)
     else
         turtle.turnRight()
         turtle.forward()
         turtle.turnRight()
-        forwardMany(length)
+        forwardMany(length, turtle.dig)
         turtle.turnRight()
-        forwardMany(width)
+        forwardMany(width, turtle.dig)
     end
     turtle.turnLeft()
 

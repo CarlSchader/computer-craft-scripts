@@ -17,9 +17,13 @@ lib.traverseArea = function(length, width, forwardOp, inSquareOp)
     end
     for i = 1,absWidth,1 do
         for j = 1,length,1 do
-            forwardOp(i, j)
+            local currLen = j
+            if i % 2 == 0 then 
+                currLen = length - j + 1
+            end
+            forwardOp(i, currLen)
             turtle.forward()
-            inSquareOp(i, j)
+            inSquareOp(i, currLen)
             if j == 1 and not(i == 1) then
                 if right then
                     turtle.turnRight()
@@ -53,8 +57,12 @@ lib.traverseAreaTwice = function(length, width, fop1, iop1, fop2, iop2)
     end
 end
 
-lib.forwardMany = function(count)
+lib.forwardMany = function(count, obstructedOp)
+    obstructedOp = obstructedOp or emptyFunc
     for _ = 1,count,1 do
+        if turtle.detect() then
+            obstructedOp()
+        end
         turtle.forward()
     end
 end
@@ -65,8 +73,12 @@ lib.backMany = function(count)
     end
 end
 
-lib.downMany = function(count)
+lib.downMany = function(count, obstructedOp)
+    obstructedOp = obstructedOp or emptyFunc
     for _ = 1,count,1 do
+        if turtle.detectDown() then
+            obstructedOp()
+        end
         turtle.down()
     end
 end
